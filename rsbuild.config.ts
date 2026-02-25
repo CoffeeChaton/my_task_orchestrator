@@ -7,4 +7,7 @@ export default defineConfig({
   server: {
     port: process.env.NODE_ENV === 'development' ? 3054 : 8080,
   },
+  output: {
+    assetPrefix: '/my_task_orchestrator/',
+  },
 });

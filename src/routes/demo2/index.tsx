@@ -1,41 +1,51 @@
 // src/routes/demo2/index.tsx
-import { useState } from "react";
 import { useWorkflow } from "./useWorkflow";
-import { LogPanel } from "./LogPanel/LogPanel";
 import { TaskSidebar } from "./TaskSidebar/TaskSidebar";
 import { ConfigPanel } from "./ConfigPanel/ConfigPanel";
+import { LogPanel } from "./LogPanel/LogPanel";
+import type { TaskInstance } from "./types";
 
+export const Demo2Page = () => {
+  const { config, setConfig } = useWorkflow();
 
-export default function Demo2Page() {
-  // 1. 唯一的 JSON 配置文件狀態與工作流邏輯
-  const workflow = useWorkflow([
-    { id: "1", type: "DISCOUNT_FIXED", enabled: true, label: "滿額現折配置", payload: { threshold: 1000, discount: 100 } },
-    { id: "2", type: "DISCOUNT_PERCENT", enabled: true, label: "季節折扣計算", payload: { rate: 0.9, stackable: false } }
-  ]);
-  
-  // 2. 選中狀態（這屬於 UI 狀態，與配置文件分開）
-  const [selectedId, setSelectedId] = useState<unknown>(null);
-  const activeTask = workflow.payload.find(t => t.id === selectedId);
+  const handleSelect = (id: number | null) => {
+    setConfig(prev => ({
+      ...prev,
+      head: { ...prev.head, activeTask: id }
+    }));
+  };
+
+  const activeTask = config.body.find(t => t.id === config.head.activeTask) || null;
 
   return (
-    <main id="orchestrator-root" className="flex h-screen w-full bg-[#f4f7f9] p-6 gap-6 font-sans text-slate-800">
-      {/* 組件一：左側任務序列 */}
-      <TaskSidebar 
-        workflow={workflow} 
-        selectedId={selectedId} 
-        onSelect={setSelectedId} 
-      />
+    <main className="flex flex-col lg:flex-row min-h-screen lg:h-screen w-full bg-[#f8fafc] lg:p-4 p-2 gap-4 lg:overflow-hidden">
+      
+      {/* 任務序列：行動端給予最小高度，不設死最大高度 */}
+      <section className="w-full lg:w-80 flex flex-col shrink-0 min-h-[350px]">
+        <TaskSidebar 
+          config={config} 
+          setConfig={setConfig} 
+          onSelect={handleSelect} 
+        />
+      </section>
 
-      {/* 組件二：中間配置面板 */}
-      <ConfigPanel 
-        activeTask={activeTask} 
-        onUpdateTask={(updated) => {
-          workflow.setPayload(prev => prev.map(t => t.id === updated.id ? updated : t));
-        }} 
-      />
+      {/* 配置面板：行動端隨內容撐開高度 */}
+      <section className="flex-1 bg-white rounded-2xl shadow-sm border border-slate-100 min-h-[400px] lg:overflow-hidden">
+        <ConfigPanel 
+          activeTask={activeTask} 
+          onUpdate={(updatedTask: TaskInstance<unknown>) => {
+            setConfig(prev => ({
+              ...prev,
+              body: prev.body.map(t => t.id === updatedTask.id ? updatedTask : t)
+            }));
+          }} 
+        />
+      </section>
 
-      {/* 組件三：右側日誌面板 */}
-      <LogPanel />
+      {/* 桌面端日誌 */}
+      <aside className="hidden lg:block w-80 shrink-0 h-full">
+        <LogPanel />
+      </aside>
     </main>
   );
-}
+};

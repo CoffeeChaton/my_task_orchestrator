@@ -1,5 +1,5 @@
 import "./App.css"
-import Demo2Page from "./routes/demo2"
+import { Demo2Page } from "./routes/demo2"
 
 const App = () => {
   return (

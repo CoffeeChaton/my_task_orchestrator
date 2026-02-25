@@ -21,11 +21,19 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
   // --- 任務操作邏輯 ---
 
   const handleAddTask = (type: TaskInstance["type"], label: string) => {
-    // 這裡需要根據 type 初始化預設的 payload
     const defaultPayloads: Record<TaskInstance["type"], TaskInstance["payload"]> = {
       REWARD: { items: [] },
       DISCOUNT_FIXED: { threshold: 0, discount: 0 },
-      DISCOUNT_PERCENT: { threshold: 0, rate: 0.5, stackable: true }
+      DISCOUNT_PERCENT: { rate: 0.5, stackable: false }, // 修正後的類型
+      // 💡 新增：停車場策略初始值
+      PARKING_STRATEGY: {
+        mode: 'HOURLY',
+        baseRate: 30,
+        freeMinutes: 15,
+        maxDailyCharge: 150,
+        thresholds: { offlineMinutes: 10, lowBattery: 20 },
+        specialRates: { isElectricVehicle: true, isSharedBike: false }
+      }
     };
 
     const newTask: TaskInstance = {
@@ -34,9 +42,11 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
       label,
       enabled: true,
       payload: defaultPayloads[type]
-    } as TaskInstance; // 強制斷言以匹配 Union
+    } as TaskInstance;
 
     setConfig(prev => ({ ...prev, body: [...prev.body, newTask] }));
+    setShowAddMenu(false);
+    onSelect(newTask.id);
   };
 
   const handleRemove = useCallback((id: number) => {
@@ -139,6 +149,14 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
               <div className="absolute bottom-full mb-2 left-0 w-full bg-white border border-slate-200 shadow-xl rounded-2xl py-2 z-50 overflow-hidden animate-in fade-in slide-in-from-bottom-2">
                 <button onClick={() => handleAddTask("REWARD", "領取獎勵")} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 flex items-center gap-3 transition-colors">🎁 <span className="font-medium text-slate-600">領取獎勵</span></button>
                 <button onClick={() => handleAddTask("DISCOUNT_FIXED", "滿額現折")} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 flex items-center gap-3 transition-colors">💰 <span className="font-medium text-slate-600">滿額現折</span></button>
+                <button onClick={() => handleAddTask("DISCOUNT_FIXED", "折扣比例")} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 flex items-center gap-3 transition-colors">💰 <span className="font-medium text-slate-600">折扣比例</span></button>
+                {/* 💡 新增：智慧停車任務 */}
+                <button
+                  onClick={() => handleAddTask("PARKING_STRATEGY", "停車計費與監控")}
+                  className="w-full text-left px-4 py-3 text-sm hover:bg-blue-50 flex items-center gap-3 transition-colors border-t border-slate-50"
+                >
+                  🅿️ <span className="font-medium text-blue-700">停車計費與監控</span>
+                </button>
                 <button onClick={() => handleClear()} className="w-full text-left px-4 py-3 text-sm hover:bg-red-50 text-red-500 flex items-center gap-3 border-t border-slate-50 mt-1">🗑️ <span className="font-medium">清空所有</span></button>
               </div>
             )}

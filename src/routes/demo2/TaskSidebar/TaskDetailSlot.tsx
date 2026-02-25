@@ -3,6 +3,7 @@ import { RewardTask } from "../slots/RewardTask";
 import { DiscountFixed } from "../slots/DiscountFixed";
 import { DiscountPercent } from "../slots/DiscountPercent";
 import type { TaskInstance } from "../types";
+import { ParkingStrategy } from "../slots/ParkingStrategy";
 
 interface Props {
   task: TaskInstance;
@@ -18,6 +19,9 @@ export const TaskDetailSlot = ({ task, onChange }: Props) => {
       return <DiscountFixed data={task.payload} onChange={onChange} />;
     case "DISCOUNT_PERCENT":
       return <DiscountPercent data={task.payload} onChange={onChange} />;
+    case "PARKING_STRATEGY":
+      return <ParkingStrategy data={task.payload} onChange={onChange} />;
+      // ParkingStrategy
     default:
       return <div className="p-4 text-red-500">未知任務類型</div>;
   }

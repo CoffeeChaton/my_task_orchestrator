@@ -17,11 +17,27 @@ threshold: z.number().min(0).default(0),
   stackable: z.boolean().default(false)
 });
 
+const ParkingStrategySchema = z.object({
+  mode: z.enum(['FIXED', 'HOURLY', 'PROGRESSIVE']),
+  baseRate: z.number().min(0),
+  freeMinutes: z.number().min(0).max(120),
+  maxDailyCharge: z.number().min(0),
+  thresholds: z.object({
+    offlineMinutes: z.number().min(1),
+    lowBattery: z.number().min(5).max(30),
+  }),
+  specialRates: z.object({
+    isElectricVehicle: z.boolean(),
+    isSharedBike: z.boolean(),
+  }),
+});
+
 // 核心：判別聯集驗證
 export const TaskInstanceSchema = z.discriminatedUnion("type", [
   z.object({ id: z.number(), enabled: z.boolean(), label: z.string(), type: z.literal("REWARD"), payload: RewardSchema }),
   z.object({ id: z.number(), enabled: z.boolean(), label: z.string(), type: z.literal("DISCOUNT_FIXED"), payload: DiscountFixedSchema }),
   z.object({ id: z.number(), enabled: z.boolean(), label: z.string(), type: z.literal("DISCOUNT_PERCENT"), payload: DiscountPercentSchema }),
+  z.object({ id: z.number(), enabled: z.boolean(), label: z.string(), type: z.literal("PARKING_STRATEGY"), payload: ParkingStrategySchema }),
 ]);
 
 export const TaskConfigSchema = z.object({

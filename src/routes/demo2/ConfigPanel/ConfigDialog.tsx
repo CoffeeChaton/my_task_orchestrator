@@ -1,5 +1,5 @@
 // src/components/demo2/ConfigDialog.tsx
-import { isTaskArray } from "@/src/utils/schema-validator";
+import { isTaskArray } from "@/src/routes/demo2/TaskSidebar/schema-validator";
 import { useState } from "react";
 import type { TaskInstance } from "../types";
 

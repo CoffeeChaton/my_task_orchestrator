@@ -1,11 +1,13 @@
+import type { TaskInstance } from "../types";
+
 // src/routes/demo2/slots/RewardTask.tsx
 interface RewardPayload {
   items: string[];
 }
 
-export const RewardTask = ({ data, onChange }: { data: unknown; onChange: (d: unknown) => void }) => {
+export const RewardTask = ({ data, onChange }: { data: unknown; onChange: (payload: TaskInstance["payload"]) => void; }) => {
   const payload = (data as RewardPayload)?.items || [];
-  
+
   const options = [
     { id: 'daily', label: '領取每日 / 每週任務獎勵' },
     { id: 'mail', label: '領取所有郵件獎勵' },
@@ -23,8 +25,8 @@ export const RewardTask = ({ data, onChange }: { data: unknown; onChange: (d: un
     <div className="space-y-4">
       {options.map(opt => (
         <label key={opt.id} className="flex items-center gap-3 p-2 hover:bg-slate-50 rounded-lg cursor-pointer transition-colors">
-          <input 
-            type="checkbox" 
+          <input
+            type="checkbox"
             checked={payload.includes(opt.id)}
             onChange={() => toggle(opt.id)}
             className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"

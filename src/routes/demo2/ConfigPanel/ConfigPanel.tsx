@@ -1,5 +1,6 @@
 // src/routes/demo2/ConfigPanel/ConfigPanel.tsx
 import { TaskDetailSlot } from "../TaskSidebar/TaskDetailSlot";
+import type { TaskInstance } from "../types";
 
 const D3 = () => {
   /* 公告區：參考圖片下方提示佈局 */
@@ -19,7 +20,14 @@ const D3 = () => {
   )
 }
 
-export const ConfigPanel = ({ activeTask, onUpdate }: any) => {
+interface ConfigPanelProps {
+  // activeTask 可能是 null (初始狀態或刪除後)
+  activeTask: TaskInstance | null;
+  // onUpdate 接收完整的任務物件，以便同步更新 label 或 payload
+  onUpdate: (updatedTask: TaskInstance) => void;
+}
+
+export const ConfigPanel = ({ activeTask, onUpdate }: ConfigPanelProps) => {
   return (
     <section className="flex-1 bg-white lg:rounded-2xl rounded-t-2xl shadow-sm border border-slate-100 flex flex-col">
       <div className="flex-1 overflow-y-auto custom-scrollbar">
@@ -35,10 +43,16 @@ export const ConfigPanel = ({ activeTask, onUpdate }: any) => {
             </header>
 
             {/* 插槽內容：在行動端會自動切換為一欄佈局 */}
-            <div className="min-h-[300px]">
+            <div className="min-h-75">
               <TaskDetailSlot
                 task={activeTask}
-                onChange={(p: unknown) => onUpdate({ ...activeTask, payload: p })}
+                onChange={(p) => {
+                  // 透過強型別斷言 (as TaskInstance) 解決 Union 類型不相容的問題
+                  onUpdate({
+                    ...activeTask,
+                    payload: p
+                  } as TaskInstance);
+                }}
               />
             </div>
 

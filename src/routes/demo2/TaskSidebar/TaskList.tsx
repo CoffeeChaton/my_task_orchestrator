@@ -1,9 +1,26 @@
 // src/routes/demo2/TaskSidebar/TaskList.tsx
-import { useSensors, useSensor, PointerSensor, DragEndEvent, DndContext, closestCenter } from '@dnd-kit/core';
+import { useSensors, useSensor, PointerSensor, type DragEndEvent, DndContext, closestCenter } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
+import type { TaskInstance } from '../types';
 
-export const TaskList = ({ tasks, activeId, onSelect, onReorder, onRemove, onToggle }: unknown) => {
+interface TaskListProps {
+  tasks: TaskInstance[];
+  activeId: number | null;
+  onSelect: (id: number | null) => void;
+  onReorder: (newTasks: TaskInstance[], nextActiveId: number | null) => void;
+  onRemove: (id: number) => void;
+  onToggle: (id: number, enabled: boolean) => void;
+}
+
+export const TaskList = ({
+  tasks,
+  activeId,
+  onSelect,
+  onReorder,
+  onRemove,
+  onToggle
+}: TaskListProps) => { // 這裡成功替換了 unknown
   const sensors = useSensors(useSensor(PointerSensor, {
     activationConstraint: { distance: 8 }
   }));
@@ -12,8 +29,8 @@ export const TaskList = ({ tasks, activeId, onSelect, onReorder, onRemove, onTog
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = tasks.findIndex((t: any) => t.id === active.id);
-      const newIndex = tasks.findIndex((t: any) => t.id === over.id);
+      const oldIndex = tasks.findIndex((t: TaskInstance) => t.id === active.id);
+      const newIndex = tasks.findIndex((t: TaskInstance) => t.id === over.id);
 
       if (oldIndex !== -1 && newIndex !== -1) {
         // 1. 計算排序後的陣列
@@ -31,7 +48,7 @@ export const TaskList = ({ tasks, activeId, onSelect, onReorder, onRemove, onTog
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={tasks.map((t: any) => t.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext items={tasks.map((t: TaskInstance) => t.id)} strategy={verticalListSortingStrategy}>
         <div className="flex flex-col gap-1.5">
           {tasks.map((task) => (
             <SortableItem

@@ -25,7 +25,7 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
     const defaultPayloads: Record<TaskInstance["type"], TaskInstance["payload"]> = {
       REWARD: { items: [] },
       DISCOUNT_FIXED: { threshold: 0, discount: 0 },
-      DISCOUNT_PERCENT: { threshold: 0, percentage: 0 }
+      DISCOUNT_PERCENT: { threshold: 0, rate: 0.5, stackable: true }
     };
 
     const newTask: TaskInstance = {
@@ -80,7 +80,7 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
       } else {
         alert("❌ 格式驗證失敗：請檢查 JSON 結構是否符合規範");
       }
-    } catch (e: unknown) {
+    } catch {
       alert("❌ 無效的 JSON 格式");
     }
   };
@@ -103,14 +103,14 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
       </header>
 
       {/* Task List Area */}
-      <div className="flex-1 overflow-y-auto p-3 min-h-[200px] custom-scrollbar">
+      <div className="flex-1 overflow-y-auto p-3 min-h-50 custom-scrollbar">
         <TaskList
           tasks={tasks}
           activeId={head.activeTask}
           onSelect={onSelect}
           onRemove={handleRemove}
           onToggle={handleToggle}
-          onReorder={(newTasks: TaskInstance<unknown>[], nextActiveId: number | null) => {
+          onReorder={(newTasks: TaskInstance[], nextActiveId: number | null) => {
             setConfig(prev => ({
               ...prev,
               head: { ...prev.head, activeTask: nextActiveId },
@@ -166,7 +166,7 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
 
       {/* ---發佈與匯入彈窗 (Modal) --- */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsModalOpen(false)} />
           <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]">
             <header className="p-5 border-b flex justify-between items-center bg-white shrink-0">

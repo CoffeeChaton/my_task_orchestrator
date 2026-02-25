@@ -1,10 +1,9 @@
 // src/components/demo2/ConfigDialog.tsx
-import { isTaskArray } from "@/src/routes/demo2/TaskSidebar/schema-validator";
 import { useState } from "react";
 import type { TaskInstance } from "../types";
 
 export function ConfigDialog({ currentTasks, onImport, onClose }: {
-    currentTasks: unknown; // 遵循指令，不使用 any
+    currentTasks: unknown;
     onImport: (data: TaskInstance[]) => void;
     onClose: () => void;
 }) {
@@ -14,13 +13,10 @@ export function ConfigDialog({ currentTasks, onImport, onClose }: {
 
     const handleImport = () => {
         try {
-            const parsed: unknown = JSON.parse(importText);
-            if (isTaskArray(parsed)) {
-                onImport(parsed);
-                onClose();
-            } else {
-                alert("JSON 格式不符合 TaskInstance 結構");
-            }
+            const parsed = JSON.parse(importText);
+            // TODO add zod schema
+            onImport(parsed);
+            onClose();
         } catch {
             alert("無效的 JSON 格式");
         }

@@ -12,9 +12,9 @@ const DiscountFixedSchema = z.object({
 });
 
 const DiscountPercentSchema = z.object({
-  threshold: z.number().min(0),
-  percentage: z.number().min(0).max(100),
-  maxDiscount: z.number().optional()
+threshold: z.number().min(0).default(0),
+  rate: z.number().min(0.1).max(1),
+  stackable: z.boolean().default(false)
 });
 
 // 核心：判別聯集驗證

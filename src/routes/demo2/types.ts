@@ -11,14 +11,14 @@ export interface DiscountFixedPayload {
 }
 
 export interface DiscountPercentPayload {
-  threshold: number;
-  percentage: number;
-  maxDiscount?: number;
+  threshold: number; // 建議保留門檻，若不需要可移除
+  rate: number;      // 0.1 ~ 1.0
+  stackable: boolean; // 是否疊加
 }
 
 // 2. 使用 Discriminated Unions 確保類型安全
 // 這樣當 type === "REWARD" 時，TS 會自動知道 payload 是 RewardPayload
-export type TaskInstance = 
+export type TaskInstance =
   | { id: number; enabled: boolean; label: string; type: "REWARD"; payload: RewardPayload }
   | { id: number; enabled: boolean; label: string; type: "DISCOUNT_FIXED"; payload: DiscountFixedPayload }
   | { id: number; enabled: boolean; label: string; type: "DISCOUNT_PERCENT"; payload: DiscountPercentPayload };

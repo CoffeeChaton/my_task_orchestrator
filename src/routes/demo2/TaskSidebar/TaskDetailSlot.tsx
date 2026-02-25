@@ -2,7 +2,7 @@
 import { RewardTask } from "../slots/RewardTask";
 import { DiscountFixed } from "../slots/DiscountFixed";
 import { DiscountPercent } from "../slots/DiscountPercent";
-import { TaskInstance } from "../types";
+import type { TaskInstance } from "../types";
 
 interface Props {
   task: TaskInstance;

@@ -5,8 +5,32 @@ import type { TTaskConfig } from "./types";
 const STORAGE_KEY = "taskconfig";
 
 const initialData: TTaskConfig = {
-  head: { lastUpdated: new Date().toISOString(), activeTask: null },
-  body: []
+  "head": {
+    "lastUpdated": "2026-02-25T09:39:59.386Z",
+    "activeTask": 1
+  },
+  "body": [
+    {
+      "id": 1,
+      "type": "PARKING_STRATEGY",
+      "label": "停車計費與監控",
+      "enabled": true,
+      "payload": {
+        "mode": "PROGRESSIVE",
+        "baseRate": 3015,
+        "freeMinutes": 0,
+        "maxDailyCharge": 150,
+        "thresholds": {
+          "offlineMinutes": 37,
+          "lowBattery": 20
+        },
+        "specialRates": {
+          "isElectricVehicle": false,
+          "isSharedBike": false
+        }
+      }
+    }
+  ]
 };
 
 export const useWorkflow = () => {
@@ -29,10 +53,10 @@ export const useWorkflow = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
   }, [config]);
 
-const setConfig = useCallback((updater: (prev: TTaskConfig) => TTaskConfig) => {
+  const setConfig = useCallback((updater: (prev: TTaskConfig) => TTaskConfig) => {
     setConfigInternal(prev => {
       const next = updater(structuredClone(prev));
-      
+
       // 比較 body 是否變動 (簡單字串化比較或深度比較)
       const isBodyChanged = JSON.stringify(prev.body) !== JSON.stringify(next.body);
 

@@ -172,7 +172,7 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
         </div>
 
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => alert("DEMO 無後端 server")}
           className="w-full py-4 rounded-2xl font-black bg-blue-600 text-white shadow-lg shadow-blue-100 flex items-center justify-center gap-2 active:scale-[0.97] transition-all tracking-wider text-sm"
         >
           <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -2,18 +2,18 @@
 import { TaskDetailSlot } from "../TaskSidebar/TaskDetailSlot";
 import type { TaskInstance } from "../types";
 
-const D3 = () => {
+const AnnouncementArea = () => {
   /* 公告區：參考圖片下方提示佈局 */
   return (
     < div className="mt-20 pt-10 border-t border-slate-100 text-center space-y-4" >
       <div className="inline-flex items-center gap-2 px-3 py-1 bg-slate-50 rounded-full text-[11px] text-slate-400 font-bold uppercase tracking-widest">
-        今日活動提示 ?
+        公告
       </div>
       <div className="text-sm text-slate-500 font-mono space-y-1.5">
-        <p>「資源收集」剩餘天數：19</p>
-        <p>「辭歲行」剩餘天數：5</p>
+        <p> 錢包轉帳功能於 2026年3月1日 00:00 ~ 00:10 維護不可用</p>
+        <p> 全平台免手續優惠，持續至 2026年3月10日 00:00 </p>
         <div className="pt-2 text-slate-400 italic">
-          TA-9: 環煙聚質 / TA-8: 褐素纖維 / TA-7: 凝膠
+          關注 Line 帳號，獲取更多優惠訊息
         </div>
       </div>
     </div >
@@ -58,7 +58,7 @@ export const ConfigPanel = ({ activeTask, onUpdate }: ConfigPanelProps) => {
 
             {/* 提示區在手機端可以縮小間距 */}
             <div className="pt-10 opacity-50">
-              <D3 />
+              <AnnouncementArea />
             </div>
           </div>
         ) : (

@@ -1,5 +1,6 @@
 // src/routes/demo2/LogPanel.tsx
 import { useEffect, useRef, useState } from "react";
+import img from "@/public/favicon.png";
 
 interface LogEntry {
   id: string;
@@ -12,9 +13,11 @@ interface LogEntry {
 
 export function LogPanel() {
   const [logs] = useState<LogEntry[]>([
-    { id: "1", type: "text", tag: "SYSTEM", tagColor: "text-blue-500", content: "引擎初始化完成，等待指令。", time: "10:45:01" },
-    { id: "2", type: "text", tag: "CALC", tagColor: "text-green-500", content: "滿額現折計算：目標金額 $1,500，符合門檻。", time: "10:45:05" },
-    { id: "3", type: "image", content: "https://via.placeholder.com/300x180", time: "10:45:10" },
+    { id: "1", type: "text", tag: "SYSTEM", tagColor: "text-blue-500", content: "並未創接 server 使用 demo 數據", time: "10:45:01" },
+    { id: "2", type: "text", tag: "SYSTEM", tagColor: "text-blue-500", content: "引擎初始化完成，等待指令。", time: "10:45:02" },
+    { id: "3", type: "text", tag: "CALC", tagColor: "text-green-500", content: "滿額現折計算：目標金額 $1,500，符合門檻。", time: "10:45:03" },
+    { id: "4", type: "image", content: img, time: "10:45:04" },
+    { id: "5", type: "text", tag: "DEMO", tagColor: "text-green-500", content: "測試圖片是否正常顯示", time: "10:45:05" },
   ]);
 
   const scrollRef = useRef<HTMLDivElement>(null);

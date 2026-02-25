@@ -4,7 +4,7 @@ import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-ki
 import { SortableItem } from './SortableItem';
 
 export const TaskList = ({ tasks, activeId, onSelect, onReorder, onRemove, onToggle }: unknown) => {
-   const sensors = useSensors(useSensor(PointerSensor, {
+  const sensors = useSensors(useSensor(PointerSensor, {
     activationConstraint: { distance: 8 }
   }));
 
@@ -33,14 +33,14 @@ export const TaskList = ({ tasks, activeId, onSelect, onReorder, onRemove, onTog
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={tasks.map((t: any) => t.id)} strategy={verticalListSortingStrategy}>
         <div className="flex flex-col gap-1.5">
-          {tasks.map((task: any, index: number) => (
+          {tasks.map((task) => (
             <SortableItem
               key={task.id}
               task={task}
               isActive={activeId === task.id}
               onClick={() => onSelect(task.id)}
-              onRemove={onRemove} // 必須傳遞
-              onToggle={onToggle} // 必須傳遞
+              onRemove={onRemove} // 檢查這行！
+              onToggle={onToggle} // 檢查這行！
             />
           ))}
         </div>

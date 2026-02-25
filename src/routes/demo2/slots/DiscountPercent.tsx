@@ -24,7 +24,7 @@ export function DiscountPercent({ data, onChange }: DiscountPercentProps) {
             onChange={(e) => onChange({ ...data, rate: Number(e.target.value) })}
             className="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
           />
-          <div className="min-w-[60px] text-right">
+          <div className="min-w-15 text-right">
             <span className="font-mono font-black text-xl text-blue-600">
               {(data.rate * 100).toFixed(0)}%
             </span>

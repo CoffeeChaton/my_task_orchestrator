@@ -1,37 +1,33 @@
 // src/routes/demo2/TaskList.tsx
-import type { TaskInstance } from '@/src/routes/demo2/types';
-import { DndContext, closestCenter, type DragEndEvent } from '@dnd-kit/core';
-import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { DndContext, closestCenter, type DragEndEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 import { SortableItem } from './SortableItem';
- 
 
-interface Props {
-  tasks: TaskInstance[];
-  onReorder: (tasks: TaskInstance[]) => void;
-  onSelect: (id: string) => void;
-  activeId: string | unknown; // 遵照指令使用 unknown
-}
+export function TaskList({ tasks, onReorder, onSelect, onToggle, activeId }: any) {
+  // 使用 Sensors 避免點擊與拖拽衝突
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
-export function TaskList({ tasks, onReorder, onSelect, activeId }: Props) {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (over && active.id !== over.id) {
-      const oldIndex = tasks.findIndex((t) => t.id === active.id);
-      const newIndex = tasks.findIndex((t) => t.id === over.id);
+      const oldIndex = tasks.findIndex((t: any) => t.id === active.id);
+      const newIndex = tasks.findIndex((t: any) => t.id === over.id);
       onReorder(arrayMove(tasks, oldIndex, newIndex));
     }
   }
 
   return (
-    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
-        <div className="space-y-2">
-          {tasks.map((task) => (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      {/* 關鍵：items 必須是 id 陣列 */}
+      <SortableContext items={tasks.map((t: any) => t.id)} strategy={verticalListSortingStrategy}>
+        <div className="task-list-container">
+          {tasks.map((task: any) => (
             <SortableItem 
               key={task.id} 
               task={task} 
               isActive={activeId === task.id}
               onClick={() => onSelect(task.id)}
+              onToggle={(enabled) => onToggle(task.id, enabled)}
             />
           ))}
         </div>

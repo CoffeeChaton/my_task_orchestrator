@@ -1,7 +1,7 @@
 // src/routes/demo2/SortableItem.tsx
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { TaskInstance } from './types';
+import type { TaskInstance } from '../types';
 
 export function SortableItem({ 
   task, 

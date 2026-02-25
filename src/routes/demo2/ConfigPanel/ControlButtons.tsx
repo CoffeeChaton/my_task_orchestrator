@@ -1,7 +1,7 @@
 // src/routes/demo2/ControlButtons.tsx
 import { useState } from "react";
-import type { TaskInstance } from "./types";
-import { ConfigDialog } from "./ConfigDialog"; // 前面實作過的對話框
+import type { TaskInstance } from "../types";
+import { ConfigDialog } from "./ConfigDialog";
 
 interface Props {
   tasks: TaskInstance[];
@@ -17,7 +17,7 @@ export function ControlButtons({ tasks, onImport, onAddTask }: Props) {
     <div className="flex items-center justify-between w-full gap-2">
       <div className="flex gap-1">
         {/* 新增按鈕 */}
-        <button 
+        <button
           onClick={() => setShowAddMenu(true)}
           className="p-2 bg-primary text-white rounded hover:bg-primary/90"
         >
@@ -25,7 +25,7 @@ export function ControlButtons({ tasks, onImport, onAddTask }: Props) {
         </button>
 
         {/* 導入導出按鈕 */}
-        <button 
+        <button
           onClick={() => setShowConfig(true)}
           className="p-2 border rounded hover:bg-accent"
         >
@@ -45,7 +45,7 @@ export function ControlButtons({ tasks, onImport, onAddTask }: Props) {
             <h4 className="font-bold mb-3">選擇任務類型</h4>
             <div className="space-y-2">
               {["RECRUIT", "BASE", "COMBAT"].map(type => (
-                <button 
+                <button
                   key={type}
                   onClick={() => { onAddTask(type); setShowAddMenu(false); }}
                   className="w-full text-left p-2 hover:bg-accent rounded"
@@ -61,10 +61,10 @@ export function ControlButtons({ tasks, onImport, onAddTask }: Props) {
 
       {/* 配置對話框 */}
       {showConfig && (
-        <ConfigDialog 
-          currentTasks={tasks} 
-          onImport={onImport} 
-          onClose={() => setShowConfig(false)} 
+        <ConfigDialog
+          currentTasks={tasks}
+          onImport={onImport}
+          onClose={() => setShowConfig(false)}
         />
       )}
     </div>

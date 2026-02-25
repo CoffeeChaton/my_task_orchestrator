@@ -1,9 +1,9 @@
 // src/routes/demo2/index.tsx
 import { useState } from "react";
 import { useWorkflow } from "./useWorkflow";
-import { LogPanel } from "./LogPanel";
-import { TaskSidebar } from "./TaskSidebar";
-import { ConfigPanel } from "./ConfigPanel";
+import { LogPanel } from "./LogPanel/LogPanel";
+import { TaskSidebar } from "./TaskSidebar/TaskSidebar";
+import { ConfigPanel } from "./ConfigPanel/ConfigPanel";
 
 
 export default function Demo2Page() {

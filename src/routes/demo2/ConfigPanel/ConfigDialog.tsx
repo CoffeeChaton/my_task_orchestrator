@@ -1,7 +1,7 @@
 // src/components/demo2/ConfigDialog.tsx
 import { isTaskArray } from "@/src/utils/schema-validator";
 import { useState } from "react";
-import type { TaskInstance } from "./types";
+import type { TaskInstance } from "../types";
 
 export function ConfigDialog({ currentTasks, onImport, onClose }: {
     currentTasks: unknown; // 遵循指令，不使用 any

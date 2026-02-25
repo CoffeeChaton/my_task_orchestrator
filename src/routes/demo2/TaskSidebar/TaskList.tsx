@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
-import { SortableItem } from './SortableItem';
+import { SortableItem } from "./SortableItem";
 
 export function TaskList({ tasks, onReorder, onSelect, onToggle, activeId }: any) {
   // 💡 修復崩潰關鍵：使用 useMemo 固化 sensors，防止拖拽中途觸發 Re-render 導致 Context 遺失

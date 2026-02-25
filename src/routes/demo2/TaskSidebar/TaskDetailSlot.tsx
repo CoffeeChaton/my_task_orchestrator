@@ -1,7 +1,9 @@
 // src/routes/demo2/TaskDetailSlot.tsx
-import { DiscountFixed } from "./slots/DiscountFixed";
-import { DiscountPercent } from "./slots/DiscountPercent";
-import { type TaskInstance } from "./types";
+
+import { DiscountFixed } from "../slots/DiscountFixed";
+import { DiscountPercent } from "../slots/DiscountPercent";
+import type { TaskInstance } from "../types";
+
 
 // 定義插槽映射表
 const SLOT_MAP: Record<string, React.FC<{ data: unknown; onChange: (d: unknown) => void }>> = {

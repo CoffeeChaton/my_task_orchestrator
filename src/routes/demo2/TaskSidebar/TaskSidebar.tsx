@@ -1,6 +1,6 @@
 // src/routes/demo2/TaskSidebar.tsx
+import { ControlButtons } from "../ConfigPanel/ControlButtons";
 import { TaskList } from "./TaskList";
-import { ControlButtons } from "./ControlButtons";
 
 export function TaskSidebar({ workflow, selectedId, onSelect }: any) {
   const { status, payload: tasks, setPayload, run, sendSignal } = workflow;

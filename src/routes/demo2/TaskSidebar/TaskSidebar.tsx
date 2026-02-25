@@ -16,25 +16,27 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
   const [showAddMenu, setShowAddMenu] = useState(false);
 
   const { body: tasks, head } = config;
-  const status = "IDLE"; 
+  const status = "IDLE";
 
   // --- 任務操作邏輯 ---
 
-  const handleAddTask = (type: string, label: string) => {
-    const newTask: TaskInstance<unknown> = {
-      id: tasks.length + 1,
-      type,
-      enabled: true,
-      label,
-      payload: {}
+  const handleAddTask = (type: TaskInstance["type"], label: string) => {
+    // 這裡需要根據 type 初始化預設的 payload
+    const defaultPayloads: Record<TaskInstance["type"], TaskInstance["payload"]> = {
+      REWARD: { items: [] },
+      DISCOUNT_FIXED: { threshold: 0, discount: 0 },
+      DISCOUNT_PERCENT: { threshold: 0, percentage: 0 }
     };
 
-    setConfig(prev => ({
-      ...prev,
-      body: [...prev.body, newTask]
-    }));
-    setShowAddMenu(false);
-    onSelect(newTask.id);
+    const newTask: TaskInstance = {
+      id: tasks.length + 1,
+      type,
+      label,
+      enabled: true,
+      payload: defaultPayloads[type]
+    } as TaskInstance; // 強制斷言以匹配 Union
+
+    setConfig(prev => ({ ...prev, body: [...prev.body, newTask] }));
   };
 
   const handleRemove = useCallback((id: number) => {
@@ -65,7 +67,7 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
     try {
       const rawData: unknown = JSON.parse(importValue);
       const parsed = validateTaskConfig(rawData);
-      
+
       if (parsed) {
         // 匯入時不更新時間戳，交由 setConfig 內部的校準邏輯判斷
         setConfig(() => ({
@@ -94,7 +96,7 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
           </p>
         </div>
         <div className="flex items-center gap-2">
-           <span className="text-[10px] px-2 py-0.5 bg-white border border-slate-200 text-slate-500 rounded font-mono uppercase shadow-sm">
+          <span className="text-[10px] px-2 py-0.5 bg-white border border-slate-200 text-slate-500 rounded font-mono uppercase shadow-sm">
             {status}
           </span>
         </div>
@@ -116,7 +118,7 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
             }));
           }}
         />
-        
+
         {tasks.length === 0 && (
           <div className="py-10 text-center text-slate-300 text-xs">尚無任務</div>
         )}
@@ -132,7 +134,7 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
             >
               <span className="text-lg">+</span> 新增任務
             </button>
-            
+
             {showAddMenu && (
               <div className="absolute bottom-full mb-2 left-0 w-full bg-white border border-slate-200 shadow-xl rounded-2xl py-2 z-50 overflow-hidden animate-in fade-in slide-in-from-bottom-2">
                 <button onClick={() => handleAddTask("REWARD", "領取獎勵")} className="w-full text-left px-4 py-3 text-sm hover:bg-slate-50 flex items-center gap-3 transition-colors">🎁 <span className="font-medium text-slate-600">領取獎勵</span></button>
@@ -141,8 +143,8 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
               </div>
             )}
           </div>
-          
-          <button 
+
+          <button
             onClick={() => setIsModalOpen(true)}
             className="px-4 h-11 rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 transition-all shadow-sm flex items-center justify-center"
             title="JSON 配置"
@@ -171,12 +173,12 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
               <h3 className="font-bold text-slate-800">配置同步管理</h3>
               <button onClick={() => setIsModalOpen(false)} className="size-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-slate-400 transition-colors">✕</button>
             </header>
-            
+
             <div className="p-6 overflow-y-auto space-y-6 custom-scrollbar">
               <section>
                 <div className="flex justify-between items-end mb-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">當前 JSON 數據</label>
-                  <button 
+                  <button
                     onClick={() => {
                       navigator.clipboard.writeText(JSON.stringify(config, null, 2));
                       alert("已複製到剪貼簿");
@@ -204,7 +206,7 @@ export const TaskSidebar = ({ config, setConfig, onSelect }: TaskSidebarProps) =
 
             <footer className="p-5 border-t bg-slate-50 flex gap-3 shrink-0">
               <button onClick={() => setIsModalOpen(false)} className="flex-1 py-3.5 rounded-xl font-bold text-slate-500 hover:bg-white border border-slate-200 transition-colors">取消</button>
-              <button 
+              <button
                 onClick={handleImport}
                 disabled={!importValue}
                 className="flex-1 py-3.5 bg-blue-600 text-white rounded-xl font-bold shadow-md shadow-blue-100 disabled:opacity-30 disabled:grayscale transition-all"

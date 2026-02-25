@@ -1,16 +1,24 @@
 // src/routes/demo2/TaskSidebar/TaskDetailSlot.tsx
-import { RewardTask } from "../slots/RewardTask"; // 💡 確保有匯入新組件
+import { RewardTask } from "../slots/RewardTask";
 import { DiscountFixed } from "../slots/DiscountFixed";
 import { DiscountPercent } from "../slots/DiscountPercent";
+import { TaskInstance } from "../types";
 
-const SLOT_MAP: Record<string, React.FC<{ data: unknown; onChange: (d: unknown) => void }>> = {
-  REWARD: RewardTask, // 💡 在這裡註冊
-  DISCOUNT_FIXED: DiscountFixed,
-  DISCOUNT_PERCENT: DiscountPercent,
-};
+interface Props {
+  task: TaskInstance;
+  onChange: (payload: TaskInstance["payload"]) => void;
+}
 
-export const TaskDetailSlot = ({ task, onChange }: any) => {
-  const SpecificConfig = SLOT_MAP[task.type];
-  if (!SpecificConfig) return <div className="p-4 text-red-400">類型 {task.type} 缺失組件</div>;
-  return <SpecificConfig data={task.payload} onChange={onChange} />;
+export const TaskDetailSlot = ({ task, onChange }: Props) => {
+  // 透過 switch-case 觸發 TypeScript 的辨識型別縮減 (Narrowing)
+  switch (task.type) {
+    case "REWARD":
+      return <RewardTask data={task.payload} onChange={onChange} />;
+    case "DISCOUNT_FIXED":
+      return <DiscountFixed data={task.payload} onChange={onChange} />;
+    case "DISCOUNT_PERCENT":
+      return <DiscountPercent data={task.payload} onChange={onChange} />;
+    default:
+      return <div className="p-4 text-red-500">未知任務類型</div>;
+  }
 };
